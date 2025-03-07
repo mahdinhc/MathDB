@@ -15,11 +15,29 @@
 			#repoTree {
 				margin-top: 20px;
 			}
+		    #fileContent {
+				margin-top: 20px;
+				padding: 10px;
+				border: 1px solid #ccc;
+				white-space: pre-wrap; /* preserve formatting */
+				overflow: auto;
+		    }
+			.math-container {
+				font-size: 16px;
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+			}
+
+			.math-container math {
+				margin:4px;
+			}
 		</style>
 	</head>
 	<body>
-	<h1>MathDB</h1>
-	<div id="repoTree">Loading maths...</div>
+		<h1>MathDB</h1>
+		<div id="repoTree">Loading maths...</div>
+		<div id="fileContent">Select a file to view its content...</div>
 	</body>
 	<script type="text/javascript" src="index.js"></script>
 </html>

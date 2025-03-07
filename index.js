@@ -10,11 +10,15 @@ function getBasename(path) {
   return dotIndex > 0 ? base.substring(0, dotIndex) : base;
 }
 
-// Example usage:
-console.log(getBasename("C:\\folder\\subfolder\\file.txt")); // Output: "file"
-console.log(getBasename("/usr/local/bin/script.js"));         // Output: "script"
-console.log(getBasename("example"));                           // Output: "example"
-
+function parseMath(str) {
+	let elm = document.createElement("div")
+	elm.setAttribute("class", "math-container")
+	let lines = str.split("\n")
+	for (let line of lines) {
+		elm.appendChild(asciimath.parseMath(line))
+	}
+	return elm
+}
 
 function buildJsTreeData(flatTree, directory) {
   const treeData = [];
@@ -45,22 +49,41 @@ function buildJsTreeData(flatTree, directory) {
   return treeData;
 }
 
+function updateNode() {
+	$('.jstree-anchor').each(function(){
+		var nodeText = $(this).text()
+		if (nodeText.substring(nodeText.lastIndexOf('.')) == ".asc") {
+			nodeText = getBasename(nodeText)
+			$(this).html(asciimath.parseMath(nodeText))
+		}
+	})
+}
+
 $(document).ready(function() {
 	$.getJSON(apiUrl, function(data) {
 		if (data && data.tree) {
 			const treeData = buildJsTreeData(data.tree, directory)
-			console.log(treeData)
 			$('#repoTree').jstree({
 				core: {
 					data: treeData
 				}
-			}).on('redraw.jstree', function () {
-				$('.jstree-anchor').each(function(){
-					var nodeText = $(this).text()
-					nodeText = getBasename(nodeText)
-					console.log(nodeText)
-					$(this).html(asciimath.parseMath(nodeText))
-				})
+			})
+			.on('redraw.jstree', updateNode)
+			.click('redraw.jstree', updateNode)
+			.on('select_node.jstree', function(e, data) {
+				const node = data.node;
+				if (node.icon === "jstree-file") {
+					const filePath = directory ? `${directory}/${node.id}` : node.id
+					const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filePath}`
+					$.get(rawUrl, function(fileData) {
+						$('#fileContent').html(parseMath(fileData))
+					}).fail(function() {
+						$('#fileContent').text("Error fetching file content.")
+					});
+				} 
+				else {
+					$('#fileContent').text("Select a file to view its content.")
+				}
 			})
 		}
 	})
