@@ -73,10 +73,14 @@ $(document).ready(function() {
 			.on('select_node.jstree', function(e, data) {
 				const node = data.node;
 				if (node.icon === "jstree-file") {
+					console.log(node.id)
 					const filePath = directory ? `${directory}/${node.id}` : node.id
 					const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filePath}`
 					$.get(rawUrl, function(fileData) {
-						$('#fileContent').html(parseMath(fileData))
+						if (node.id.substring(node.id.lastIndexOf('.')) == ".asc") {
+							$('#fileContent').html(parseMath(fileData))
+						}
+						else $('#fileContent').html(fileData)
 					}).fail(function() {
 						$('#fileContent').text("Error fetching file content.")
 					});

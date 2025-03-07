@@ -6,6 +6,7 @@
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" />
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
+		<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/latest.js?config=AM_CHTML-full"></script>
 		<script src="ASCIIMathML.js"></script>
 		<style>
 			body {
@@ -28,9 +29,19 @@
 				flex-direction: column;
 				align-items: flex-start;
 			}
-
 			.math-container math {
-				margin:7px;
+				margin:4px;
+			}
+			math {
+				font-family: MJXc-TeX-size2-R, MJXc-TeX-size2-Rw;
+			}
+			.jstree-default .jstree-anchor {
+				height: auto;
+				padding: 5px;
+			}
+			.jstree-default .jstree-clicked {
+				background: #73fb5b3d;
+				border-radius: 5px;
 			}
 		</style>
 	</head>
