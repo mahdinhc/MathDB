@@ -67,7 +67,25 @@ function updateNode() {
 	})
 }
 
+
+function renderAsciiMath() {
+	const input = document.getElementById("input").value
+	document.getElementById("output").innerHTML = ""
+	document.getElementById("output").append(parseMath(input))
+}
+
+document.getElementById("input").addEventListener("input", renderAsciiMath)
+
+$(window).on("beforeunload", function() {
+    localStorage.setItem("userInput", $("#input").val())
+})
+
 $(document).ready(function() {
+	let savedInput = localStorage.getItem("userInput")
+	if (savedInput) {
+		$("#input").val(savedInput)
+	}
+	renderAsciiMath()
 	$.getJSON(apiUrl, function(data) {
 		if (data && data.tree) {
 			const treeData = buildJsTreeData(data.tree, directory)
@@ -102,16 +120,6 @@ $(document).ready(function() {
 		$('#repoTree').html('<p>Error fetching repository tree data. Please check the repository details and try again.</p>')
 	})
 })
-
-
-function renderAsciiMath() {
-	const input = document.getElementById("input").value
-	document.getElementById("output").innerHTML = ""
-	document.getElementById("output").append(parseMath(input))
-}
-
-document.getElementById("input").addEventListener("input", renderAsciiMath)
-window.onload = renderAsciiMath
 
 $("#mode-renderer").click(function(){
 	$(this).hide()
